@@ -23,9 +23,56 @@ const { NotImplementedError } = require('../extensions/index.js');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function minesweeper(matrix) {
+  let bombCounter = 0;
+  let newMatrix = new Array(matrix.length);
+  for (let i = 0; i < matrix.length; i++) {
+    newMatrix[i] = new Array(matrix[i].length);
+  }
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      newMatrix[i][j] = matrix[i][j];
+    }
+  }
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      if (i == 0) {
+        if (j == 0) {
+          bombCounter = [matrix[i][j+1], matrix[i+1][j+1], matrix[i+1][j]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue;
+        } else if (j == matrix[i].length - 1) {
+          bombCounter = [matrix[i][j-1], matrix[i+1][j-1], matrix[i+1][j]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue;
+        } else {
+          bombCounter = [matrix[i][j-1], matrix[i+1][j-1], matrix[i+1][j], matrix[i+1][j+1], matrix[i][j+1]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue;
+        }
+      } else if (i == matrix.length - 1) {
+        if (j == 0) {
+          bombCounter = [matrix[i-1][j], matrix[i-1][j+1], matrix[i][j+1]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue;
+        } else if (j == matrix[i].length - 1) {
+          bombCounter = [matrix[i][j-1], matrix[i-1][j-1], matrix[i-1][j]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue;
+        } else {
+          bombCounter = [matrix[i][j-1], matrix[i-1][j-1], matrix[i-1][j], matrix[i-1][j+1], matrix[i][j+1]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue
+        }
+      } else {
+          bombCounter = [matrix[i-1][j-1], matrix[i-1][j], matrix[i-1][j+1], matrix[i][j+1], 
+                         matrix[i+1][j+1], matrix[i+1][j], matrix[i+1][j-1], matrix[i][j-1]].filter(elem => elem).length;
+          newMatrix[i][j] = bombCounter;
+          continue;
+      }
+    }
+  }
+  return newMatrix;
 }
 
 module.exports = {
